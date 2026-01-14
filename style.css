@@ -1,0 +1,520 @@
+/* ============================================
+WIKIPEDIA QUILT - STYLESHEET
+A warm, tactile aesthetic inspired by
+handmade quilts and museum archives
+============================================ */
+
+/* CSS Variables for easy theming */
+:root {
+–color-cream: #f7f3eb;
+–color-warm-white: #fefdfb;
+–color-charcoal: #2a2a28;
+–color-muted: #6b6860;
+–color-accent: #c45d4a;
+–color-accent-hover: #a84937;
+–color-border: rgba(42, 42, 40, 0.12);
+–color-shadow: rgba(42, 42, 40, 0.08);
+–font-display: ‘Instrument Serif’, Georgia, serif;
+–font-body: ‘DM Sans’, -apple-system, sans-serif;
+–header-height: 64px;
+–transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+–gap-size: 4px;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
+html, body {
+height: 100%;
+overflow-x: hidden;
+}
+
+body {
+font-family: var(–font-body);
+background: var(–color-cream);
+color: var(–color-charcoal);
+line-height: 1.5;
+}
+
+/* ============================================
+CONTROL BAR
+============================================ */
+.control-bar {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+height: var(–header-height);
+background: var(–color-warm-white);
+border-bottom: 1px solid var(–color-border);
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 24px;
+z-index: 100;
+backdrop-filter: blur(8px);
+background: rgba(254, 253, 251, 0.92);
+}
+
+.app-title {
+font-family: var(–font-display);
+font-size: 1.5rem;
+font-weight: 400;
+font-style: italic;
+color: var(–color-charcoal);
+letter-spacing: -0.01em;
+}
+
+.controls {
+display: flex;
+align-items: center;
+gap: 20px;
+}
+
+/* Color Control Group */
+.color-control {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.color-label {
+display: flex;
+align-items: center;
+gap: 10px;
+cursor: pointer;
+user-select: none;
+}
+
+.color-toggle {
+position: absolute;
+opacity: 0;
+pointer-events: none;
+}
+
+.toggle-track {
+width: 40px;
+height: 22px;
+background: var(–color-border);
+border-radius: 11px;
+position: relative;
+transition: background 0.2s var(–transition-smooth);
+}
+
+.color-toggle:checked + .toggle-track {
+background: var(–color-accent);
+}
+
+.toggle-thumb {
+position: absolute;
+top: 2px;
+left: 2px;
+width: 18px;
+height: 18px;
+background: var(–color-warm-white);
+border-radius: 50%;
+transition: transform 0.2s var(–transition-smooth);
+box-shadow: 0 1px 3px var(–color-shadow);
+}
+
+.color-toggle:checked + .toggle-track .toggle-thumb {
+transform: translateX(18px);
+}
+
+.toggle-label {
+font-size: 0.875rem;
+color: var(–color-muted);
+font-weight: 500;
+}
+
+.color-picker {
+width: 36px;
+height: 36px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+padding: 0;
+overflow: hidden;
+opacity: 0.4;
+transition: opacity 0.2s var(–transition-smooth), transform 0.2s var(–transition-smooth);
+}
+
+.color-picker:not(:disabled) {
+opacity: 1;
+}
+
+.color-picker:not(:disabled):hover {
+transform: scale(1.08);
+}
+
+.color-picker::-webkit-color-swatch-wrapper {
+padding: 0;
+}
+
+.color-picker::-webkit-color-swatch {
+border: 2px solid var(–color-border);
+border-radius: 6px;
+}
+
+/* Re-roll Button */
+.reroll-btn {
+display: flex;
+align-items: center;
+gap: 8px;
+padding: 10px 18px;
+background: var(–color-charcoal);
+color: var(–color-warm-white);
+border: none;
+border-radius: 8px;
+font-family: var(–font-body);
+font-size: 0.875rem;
+font-weight: 500;
+cursor: pointer;
+transition: background 0.2s var(–transition-smooth), transform 0.15s var(–transition-smooth);
+}
+
+.reroll-btn:hover {
+background: var(–color-accent);
+transform: translateY(-1px);
+}
+
+.reroll-btn:active {
+transform: translateY(0);
+}
+
+.dice-icon {
+width: 18px;
+height: 18px;
+}
+
+/* ============================================
+LOADING OVERLAY
+============================================ */
+.loading-overlay {
+position: fixed;
+inset: 0;
+background: rgba(247, 243, 235, 0.95);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 200;
+opacity: 1;
+transition: opacity 0.4s var(–transition-smooth);
+}
+
+.loading-overlay.hidden {
+opacity: 0;
+pointer-events: none;
+}
+
+.loading-content {
+text-align: center;
+}
+
+.loading-spinner {
+width: 48px;
+height: 48px;
+border: 3px solid var(–color-border);
+border-top-color: var(–color-accent);
+border-radius: 50%;
+animation: spin 1s linear infinite;
+margin: 0 auto 16px;
+}
+
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+
+.loading-text {
+font-family: var(–font-display);
+font-size: 1.25rem;
+font-style: italic;
+color: var(–color-charcoal);
+margin-bottom: 8px;
+}
+
+.loading-progress {
+font-size: 0.875rem;
+color: var(–color-muted);
+}
+
+/* ============================================
+MESSAGE DISPLAY
+============================================ */
+.message-display {
+position: fixed;
+top: calc(var(–header-height) + 20px);
+left: 50%;
+transform: translateX(-50%);
+background: var(–color-warm-white);
+padding: 16px 24px;
+border-radius: 12px;
+box-shadow: 0 4px 20px var(–color-shadow), 0 0 0 1px var(–color-border);
+z-index: 150;
+max-width: 90%;
+text-align: center;
+transition: opacity 0.3s var(–transition-smooth), transform 0.3s var(–transition-smooth);
+}
+
+.message-display.hidden {
+opacity: 0;
+transform: translateX(-50%) translateY(-10px);
+pointer-events: none;
+}
+
+.message-display p {
+font-size: 0.9375rem;
+color: var(–color-charcoal);
+}
+
+/* ============================================
+QUILT GRID
+Masonry-style responsive grid
+============================================ */
+.quilt-grid {
+padding-top: calc(var(–header-height) + var(–gap-size));
+min-height: 100vh;
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+grid-auto-rows: 180px;
+gap: var(–gap-size);
+background: var(–color-charcoal);
+}
+
+/* Vary tile sizes for quilt effect */
+.quilt-tile:nth-child(5n+1) {
+grid-row: span 2;
+}
+
+.quilt-tile:nth-child(7n+3) {
+grid-column: span 2;
+}
+
+.quilt-tile:nth-child(11n+7) {
+grid-column: span 2;
+grid-row: span 2;
+}
+
+/* ============================================
+QUILT TILE
+============================================ */
+.quilt-tile {
+position: relative;
+overflow: hidden;
+cursor: pointer;
+background: var(–color-cream);
+}
+
+.quilt-tile::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+background: linear-gradient(
+to top,
+rgba(0, 0, 0, 0.7) 0%,
+rgba(0, 0, 0, 0.3) 40%,
+transparent 100%
+);
+opacity: 0;
+transition: opacity 0.3s var(–transition-smooth);
+z-index: 2;
+pointer-events: none;
+}
+
+.quilt-tile:hover::before {
+opacity: 1;
+}
+
+.tile-image {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform 0.4s var(–transition-smooth);
+}
+
+.quilt-tile:hover .tile-image {
+transform: scale(1.05);
+}
+
+/* Attribution Overlay */
+.tile-attribution {
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+padding: 12px;
+z-index: 3;
+transform: translateY(100%);
+transition: transform 0.3s var(–transition-smooth);
+}
+
+.quilt-tile:hover .tile-attribution {
+transform: translateY(0);
+}
+
+.tile-title {
+font-family: var(–font-display);
+font-size: 0.9375rem;
+color: white;
+margin-bottom: 4px;
+line-height: 1.3;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+
+.tile-meta {
+font-size: 0.75rem;
+color: rgba(255, 255, 255, 0.75);
+display: flex;
+flex-wrap: wrap;
+gap: 4px 12px;
+}
+
+.tile-author,
+.tile-license {
+display: flex;
+align-items: center;
+gap: 4px;
+}
+
+.tile-author::before {
+content: ‘✦’;
+font-size: 0.625rem;
+opacity: 0.6;
+}
+
+.tile-license::before {
+content: ‘©’;
+font-size: 0.625rem;
+opacity: 0.6;
+}
+
+/* Loading state for tiles */
+.quilt-tile.loading {
+background: linear-gradient(
+90deg,
+var(–color-cream) 0%,
+var(–color-warm-white) 50%,
+var(–color-cream) 100%
+);
+background-size: 200% 100%;
+animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+0% { background-position: 200% 0; }
+100% { background-position: -200% 0; }
+}
+
+/* ============================================
+RESPONSIVE ADJUSTMENTS
+============================================ */
+@media (max-width: 768px) {
+.control-bar {
+padding: 0 16px;
+flex-wrap: wrap;
+height: auto;
+padding: 12px 16px;
+gap: 12px;
+}
+
+```
+.app-title {
+    font-size: 1.25rem;
+}
+
+.controls {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.toggle-label {
+    display: none;
+}
+
+.reroll-btn span {
+    display: none;
+}
+
+.reroll-btn {
+    padding: 10px;
+}
+
+.quilt-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-auto-rows: 140px;
+    padding-top: calc(100px + var(--gap-size));
+}
+
+/* Simplify tile sizes on mobile */
+.quilt-tile:nth-child(5n+1),
+.quilt-tile:nth-child(7n+3),
+.quilt-tile:nth-child(11n+7) {
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+.quilt-tile:nth-child(4n+1) {
+    grid-row: span 2;
+}
+
+.quilt-tile:nth-child(6n+3) {
+    grid-column: span 2;
+}
+```
+
+}
+
+@media (max-width: 480px) {
+.quilt-grid {
+grid-template-columns: repeat(2, 1fr);
+grid-auto-rows: 120px;
+}
+
+```
+.quilt-tile:nth-child(4n+1),
+.quilt-tile:nth-child(6n+3) {
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+.quilt-tile:nth-child(3n+1) {
+    grid-row: span 2;
+}
+```
+
+}
+
+/* ============================================
+FOCUS STATES FOR ACCESSIBILITY
+============================================ */
+.color-toggle:focus + .toggle-track {
+outline: 2px solid var(–color-accent);
+outline-offset: 2px;
+}
+
+.color-picker:focus,
+.reroll-btn:focus {
+outline: 2px solid var(–color-accent);
+outline-offset: 2px;
+}
+
+.quilt-tile:focus {
+outline: 3px solid var(–color-accent);
+outline-offset: -3px;
+z-index: 10;
+}
+
+.quilt-tile:focus .tile-attribution {
+transform: translateY(0);
+}
+
+.quilt-tile:focus::before {
+opacity: 1;
+}
